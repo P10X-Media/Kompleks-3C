@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kompleks 3C Digital Billboard — P10X Media</title>
+<script src="./ds-base.js"></script>
+<style>
+deck-stage:not(:defined) { visibility: hidden; }
+
+/* Brand accent: the P10X teal replaces the system gold — a full OKLCH-matched
+   ramp so every ramp-step reference keeps its tuned contrast. */
+:root {
+  --color-accent-100: #e2f5f7;
+  --color-accent-200: #c1ebee;
+  --color-accent-300: #8fd9e0;
+  --color-accent-400: #4cc1cd;
+  --color-accent-500: #17a3b0;
+  --color-accent: #17a3b0;
+  --color-accent-600: #108c99;
+  --color-accent-700: #0b6b77;
+  --color-accent-800: #084f59;
+  --color-accent-900: #063a42;
+}
+
+deck-stage {
+  --type-display: 140px;
+  --type-title: 76px;
+  --type-subtitle: 42px;
+  --type-body: 36px;
+  --type-small: 30px;
+  --type-kicker: 24px;
+  --pad-x: 144px;
+  --pad-top: 104px;
+  --pad-bottom: 92px;
+  --page-foot-note: "P10X Media Sdn. Bhd. — Kompleks 3C, 2026";
+  --baseline: 52px;
+}
+
+.slide {
+  display: flex; flex-direction: column;
+  background: var(--color-bg); color: var(--color-text);
+  font-family: var(--font-body);
+  text-wrap: pretty;
+  padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
+  print-color-adjust: exact; -webkit-print-color-adjust: exact;
+}
+
+/* — shared pieces — */
+.kicker {
+  position: absolute; top: calc(2 * var(--baseline) - 1cap);
+  left: var(--pad-x); text-box: trim-both cap alphabetic;
+  font-size: var(--type-kicker); letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--color-accent-700);
+  font-feature-settings: "tnum" 1;
+}
+.slide-title {
+  font-family: var(--font-heading); font-weight: 400;
+  font-size: var(--type-title); line-height: calc(1.5 * var(--baseline)); letter-spacing: -0.01em; margin: 0;
+  margin-left: -0.042em;
+  text-box: trim-both cap alphabetic;
+}
+.pin-bottom { position: absolute; left: var(--pad-x); right: var(--pad-x); bottom: var(--pad-bottom); }
+.meta { display: flex; align-items: baseline; gap: 18px; font-size: var(--type-kicker); color: color-mix(in srgb, var(--color-text) 55%, transparent); font-feature-settings: "tnum" 1; }
+.meta span { text-box: trim-both cap alphabetic; }
+
+/* Page furniture */
+deck-stage { counter-reset: page; }
+.slide { counter-increment: page; }
+.page-foot {
+  position: absolute; left: var(--pad-x); bottom: calc(1080px - 20 * var(--baseline));
+  font-size: var(--type-kicker);
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  text-box: trim-both cap alphabetic;
+}
+.page-foot::before { content: counter(page) " · "; font-feature-settings: "tnum" 1; }
+.page-foot::after { content: var(--page-foot-note); }
+deck-stage[no-page-furniture] .page-foot, deck-stage[no-page-furniture] .page-head { display: none !important; }
+.half-bleed:not(.flip) .page-foot { left: calc(960px + var(--pad-x)); }
+
+/* — cover and close — */
+.cover { justify-content: center; }
+.cover .rise { display: flex; flex-direction: column; gap: 42px; }
+.cover-logo { position: absolute; top: var(--pad-top); left: var(--pad-x); height: 84px; mix-blend-mode: multiply; }
+.display {
+  font-family: var(--font-heading); font-weight: 400;
+  font-size: var(--type-display); line-height: calc(2.5 * var(--baseline)); letter-spacing: -0.015em; margin: 0;
+  margin-left: -0.042em;
+}
+.cover-sub { font-size: var(--type-subtitle); line-height: var(--baseline); max-width: 38ch; margin: 0; }
+.cover-figure { position: absolute; inset: 0 0 0 auto; width: 720px; margin: 0; }
+.cover-figure image-slot { width: 100%; height: 100%; }
+.cover-figure.plate { border: 0; outline: 0; }
+
+/* — content slides — */
+.content { padding-top: calc(4 * var(--baseline)); }
+.content > .slide-title { margin-top: -1cap; }
+.content > .bullets { margin-top: calc(4 * var(--baseline) - 1cap); }
+.content > .table { margin-top: calc(3 * var(--baseline)); }
+.content > .chart-caption { margin-top: calc(2 * var(--baseline) - 1cap); }
+.bullets { display: flex; flex-direction: column; max-width: 1200px; margin: 0; padding: 0; list-style: none; font-size: var(--type-body); }
+.bullets li {
+  line-height: var(--baseline); text-box: trim-both cap alphabetic;
+  text-indent: -0.664em;
+}
+.bullets li::before { content: "• "; color: var(--color-accent); }
+.bullets li + li { margin-top: calc(2 * var(--baseline) - 1cap); }
+
+/* — ruled list (contents pattern, reused for the pillar summary) — */
+.toc { display: flex; flex-direction: column; max-width: 1632px;
+  font-size: var(--type-subtitle); border-top: 1px solid var(--color-divider); }
+.toc-row { display: flex; align-items: baseline; gap: 54px;
+  border-bottom: 1px solid var(--color-divider);
+  padding-block: calc(1 * var(--baseline) - 0.5cap - 0.5px); }
+.toc-row > span { text-box: trim-both cap alphabetic; }
+.toc-num { font-size: var(--type-kicker); color: var(--color-accent); font-feature-settings: "tnum" 1; }
+.pillar-desc { margin-left: auto; font-size: var(--type-small); color: color-mix(in srgb, var(--color-text) 55%, transparent); }
+.content > .lead { font-size: var(--type-small); line-height: var(--baseline); max-width: 88ch; margin: calc(3 * var(--baseline) - 1cap) 0 0; text-box: trim-both cap alphabetic; }
+.content > .lead + .toc { margin-top: calc(1 * var(--baseline)); }
+
+/* — column layouts — */
+.cols { position: relative; display: grid; --col-gap: calc(2 * var(--baseline));
+  column-gap: var(--col-gap); margin-top: calc(2 * var(--baseline)); }
+.cols-2 { grid-template-columns: 1fr 1fr; }
+.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.cols::before, .cols::after { content: ""; position: absolute; top: 0; bottom: 0; width: 1px; background: var(--color-divider); }
+.cols-2::before { left: calc(50% - 0.5px); }
+.cols-2::after { content: none; }
+.cols-3::before { left: calc((100% - 2 * var(--col-gap)) / 3 + var(--col-gap) / 2 - 0.5px); }
+.cols-3::after { left: calc(2 * (100% - 2 * var(--col-gap)) / 3 + 1.5 * var(--col-gap) - 0.5px); }
+.cols h3 { font-family: var(--font-heading); font-weight: 400;
+  font-size: 48px; line-height: var(--baseline); margin: 0;
+  margin-top: calc(var(--baseline) - 1cap);
+  text-box: trim-both cap alphabetic; }
+.col-num { font-size: var(--type-kicker); letter-spacing: 0.08em; color: var(--color-accent);
+  font-feature-settings: "tnum" 1; margin: 0;
+  margin-top: calc(var(--baseline) - 1cap);
+  text-box: trim-both cap alphabetic; }
+.cols.plain p { text-align: left; }
+.cols p { font-size: var(--type-small); line-height: var(--baseline); margin: 0;
+  margin-top: calc(var(--baseline) - 1cap);
+  text-align: justify; hyphens: none;
+  text-box: trim-both cap alphabetic; }
+
+/* — data table (component class at projection scale) — */
+.slide .table { max-width: 1560px; font-size: 30px; font-feature-settings: "tnum" 1; }
+.slide .table th, .slide .table td {
+  text-box: trim-both cap alphabetic;
+  padding: calc(var(--baseline) - 0.5cap - 0.5px) 28px calc(var(--baseline) - 0.5cap - 0.5px);
+}
+.slide .table th { font-size: var(--type-kicker); }
+.slide .table tbody tr:hover { background: none; }
+.slide .table th:first-child, .slide .table td:first-child { padding-left: 0; }
+.slide .table th:last-child, .slide .table td:last-child { padding-right: 0; }
+
+/* — hero figure — */
+.hero { justify-content: center; gap: 42px; }
+.hero-num {
+  font-family: var(--font-heading); font-weight: 400;
+  font-size: 340px; line-height: 1; letter-spacing: -0.02em; margin: 0;
+  color: var(--color-accent);
+  font-feature-settings: "tnum" 1;
+  margin-left: -0.042em;
+}
+.hero-caption { font-size: var(--type-small); line-height: var(--baseline); max-width: 44ch; margin: 0; }
+.chart-caption { font-size: 26px; line-height: var(--baseline); max-width: 84ch; margin: 0; text-box: trim-both cap alphabetic; }
+
+/* — image slides — */
+.split { flex-direction: row; align-items: center; gap: 96px; }
+.split-copy { flex: none; width: 640px; display: flex; flex-direction: column; gap: 42px; }
+.split-copy .note { font-size: var(--type-small); line-height: var(--baseline); margin: 0; }
+.split-figure { min-width: 0; flex: 1; height: 780px; }
+.split-figure.drawing { flex: none; width: 625px; margin-left: auto; }
+.split-figure image-slot { width: 100%; height: 100%; }
+.split-figure.plate { border-width: 14px; }
+.bleed-figure.plate, .half-bleed-figure.plate { border: 0; outline: 0; }
+
+/* — full-bleed image slide — */
+.bleed-figure { position: absolute; inset: 0; margin: 0; }
+.bleed-figure image-slot { width: 100%; height: 100%; }
+.bleed-scrim {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(to top,
+      color-mix(in srgb, var(--color-bg) 98%, transparent),
+      color-mix(in srgb, var(--color-bg) 88%, transparent) 30%,
+      color-mix(in srgb, var(--color-bg) 45%, transparent) 52%,
+      transparent 70%);
+}
+.bleed-copy { position: absolute; left: var(--pad-x); right: var(--pad-x); bottom: var(--pad-bottom); pointer-events: none; }
+.bleed-copy .note {
+  font-size: var(--type-small); line-height: var(--baseline); max-width: 52ch;
+  margin: calc(2 * var(--baseline) - 1cap) 0 0;
+  text-box: trim-both cap alphabetic;
+  color: var(--color-text);
+}
+
+/* Entrance */
+@media (prefers-reduced-motion: no-preference) {
+  [data-deck-active] .rise { animation: rise 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+}
+</style>
+</head>
+<body>
+<deck-stage width="1920" height="1080">
+
+  <section class="slide cover" data-label="Title" data-speaker-notes="A premium digital site inside a council complex, on one of the Klang Valley's busiest urban expressways.">
+    <img class="cover-logo" src="assets/img-p1-2.png" alt="P10X Media" />
+    <figure class="cover-figure plate">
+      <image-slot id="photo-cover" shape="rect" src="assets/img-p3-5.png" role="img" aria-label="Render of the digital billboard seen from the NPE carriageway"></image-slot>
+    </figure>
+    <div class="rise">
+      <h1 class="display" style="font-size: 116px;"><span>Kompleks 3C</span><br /><span>Digital Billboard</span></h1>
+      <p class="cover-sub text-muted">A 30 foot digital unipole planned for the New Pantai Expressway frontage of Kompleks 3C MBSJ, Subang Jaya — an introduction by P10X Media.</p>
+    </div>
+    <div class="pin-bottom meta"><span>P10X Media Sdn. Bhd.</span><span>·</span><span>August 2026</span></div>
+  </section>
+
+  <section class="slide bleed" data-label="The Site" data-speaker-notes="Kompleks 3C MBSJ fronts the NPE at Bandar Sunway — the screen stands at the main entrance, facing the carriageway.">
+    <figure class="bleed-figure plate">
+      <image-slot id="photo-site" shape="rect" src="assets/img-p4-7.png" role="img" aria-label="Aerial view of Kompleks 3C MBSJ fronting the New Pantai Expressway"></image-slot>
+    </figure>
+    <div class="bleed-scrim"></div>
+    <div class="bleed-copy rise">
+      <h2 class="slide-title">The Site</h2>
+      <p class="note text-muted">Kompleks 3C MBSJ fronts the New Pantai Expressway at Bandar Sunway, in the middle of the Sunway growth corridor. The unipole rises beside the complex&rsquo;s main entrance, facing the carriageway in both directions.</p>
+    </div>
+  </section>
+
+  
+
+  <section class="slide split" data-label="The Screen" data-speaker-notes="30 by 20 feet of high resolution LED on a unipole — full motion content, over 150 metres clear of the nearest board.">
+    <div class="split-copy">
+      <h2 class="slide-title">The Screen</h2>
+      <ul class="bullets">
+        <li>30&prime;&nbsp;(H) &times; 20&prime;&nbsp;(W) high resolution LED face</li>
+        <li>Unipole build on a 20 foot column</li>
+        <li>RHS 2&Prime; &times; 4&Prime; frame, 2.0&nbsp;mm gauge</li>
+        <li>Full motion content, day and night</li>
+        <li>Over 150&nbsp;m clear of the nearest billboard</li>
+      </ul>
+    </div>
+    <figure class="split-figure drawing plate rise">
+      <image-slot id="photo-screen" shape="rect" src="assets/img-p4-6.png" role="img" aria-label="Specification drawing of the 30 by 20 foot LED unipole"></image-slot>
+    </figure>
+    <div class="page-foot" aria-hidden="true"></div>
+  </section><section class="slide hero" data-label="Traffic &amp; Reach" data-speaker-notes="LLM's own monitoring puts the NPE above 200,000 vehicles a day — every one passes the Kompleks 3C frontage.">
+    <div class="kicker"><span>Traffic &amp; Reach</span></div>
+    <p class="hero-num rise">200,000+</p>
+    <p class="hero-caption text-muted">Vehicles use the New Pantai Expressway every day, by the Malaysian Highway Authority&rsquo;s own monitoring — each one passing the Kompleks 3C frontage.</p>
+    <div class="page-foot" aria-hidden="true"></div>
+  </section>
+
+  <section class="slide content" data-label="The Audience" data-speaker-notes="Three audiences share the site: the NPE commuter flow, the Subang Jaya catchment, and footfall inside the complex.">
+    <h2 class="slide-title">The Audience</h2>
+    <div class="cols cols-3 plain rise">
+      <div>
+        <p class="col-num">01</p>
+        <h3>Commuters</h3>
+        <p>Daily NPE traffic between Kuala Lumpur, Subang Jaya and Bandar Sunway.</p>
+        <p>Morning and evening peaks pass the site in both directions.</p>
+      </div>
+      <div>
+        <p class="col-num">02</p>
+        <h3>Residents</h3>
+        <p>Households in Subang Jaya, USJ and Bandar Sunway surround the complex.</p>
+        <p>Campuses and offices sit minutes from the screen.</p>
+      </div>
+      <div>
+        <p class="col-num">03</p>
+        <h3>Visitors</h3>
+        <p>Daily footfall into Kompleks 3C and its community facilities.</p>
+        <p>Students and clients of the P10X Academy, already on site.</p>
+      </div>
+    </div>
+    <div class="page-foot" aria-hidden="true"></div>
+  </section>
+
+  
+
+  <section class="slide content" data-label="P10X at a Glance" data-speaker-notes="From the company profile: founded 2019, 20+ outlets; Academy at Kompleks 3C, retail across PJ Uptown, Bangsar, Sunway, Equine Park, Kepong; Maison distribution; Media for external clients.">
+    <h2 class="slide-title">About P10X</h2>
+    <p class="lead text-muted">Founded in 2019, P10X has grown from one outlet into an automotive aesthetic ecosystem — more than 20 outlets and a government accredited academy, built on people, quality and transparency.</p>
+    <div class="toc rise">
+      <div class="toc-row"><span class="toc-num">01</span><span>Academy</span><span class="pillar-desc">Malaysia&rsquo;s first automotive aesthetic TVET academy, at Kompleks 3C MBSJ</span></div>
+      <div class="toc-row"><span class="toc-num">02</span><span>Retail</span><span class="pillar-desc">20+ outlets across PJ Uptown, Bangsar, Sunway, Equine Park and Kepong</span></div>
+      <div class="toc-row"><span class="toc-num">03</span><span>Distribution</span><span class="pillar-desc">P10X Maison — film supply for businesses and partners</span></div>
+      <div class="toc-row"><span class="toc-num">04</span><span>Media</span><span class="pillar-desc">Content and brand campaigns</span></div>
+    </div>
+    <div class="page-foot" aria-hidden="true"></div>
+  </section>
+
+  <section class="slide cover" data-label="Close" data-speaker-notes="The letter's own close — thanks, and the hope that the screen adds value to Kompleks 3C, the Smart City aspiration and local PKS.">
+    <img class="cover-logo" src="assets/img-p1-2.png" alt="P10X Media" />
+    <div class="rise">
+      <h2 class="display">Thank You</h2>
+      <p class="cover-sub text-muted">May this effort add value to Kompleks 3C&rsquo;s infrastructure, support the Smart City aspiration, and uplift local PKS entrepreneurs around Subang Jaya.</p>
+    </div>
+    <div class="pin-bottom meta"><span>William Lee — Chief Executive Officer</span><span>·</span><span>P10X Media Sdn. Bhd.</span></div>
+  </section>
+
+</deck-stage>
+<script src="deck-stage.js"></script>
+<script src="image-slot.js"></script>
+</body>
+</html>
